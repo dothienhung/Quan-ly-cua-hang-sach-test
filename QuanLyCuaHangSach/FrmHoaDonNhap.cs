@@ -137,7 +137,7 @@ namespace QuanLyCuaHangSach
             if (!DAO.checkKeyExit(sql))
             {
                 // Mã hóa đơn chưa có, tiến hành lưu các thông tin chung
-                // Mã HDBan được sinh tự động do đó không có trường hợp trùng khóa
+               
                 if (txtnn.Text.Length == 0)
                 {
                     MessageBox.Show("Bạn phải nhập ngày bán", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -187,7 +187,7 @@ namespace QuanLyCuaHangSach
                 cboms.Focus();
                 return;
             }
-            // Kiểm tra xem số lượng hàng trong kho còn đủ để cung cấp không?
+         
             sl = Convert.ToDouble(DAO.GetFieldValues("SELECT SoLuong FROM KhoSach WHERE MaSach = N'" + cboms.SelectedValue + "'"));
            
             sql = "INSERT INTO ChiTietHDN(SoHDN,MaSach,SoLuongNhap,KhuyenMai, ThanhTien) VALUES(N'" + txtmhdn.Text.Trim() + "', N'" + cboms.SelectedValue +"'," + txtsl.Text + "," + txtgg.Text + "," + txtthanhtien.Text + ")";
@@ -210,8 +210,8 @@ namespace QuanLyCuaHangSach
             DAO.RunSql(sql);
             txttongtien.Text = Tongmoi.ToString();
             txtbc.Text =  DAO.ChuyenSoSangChu(Tongmoi.ToString());
-            Load_DataGridViewChitiet();
             ResetValuesHang();
+            Load_DataGridViewChitiet();
             btnXoa.Enabled = true;
             btnThem.Enabled = true;
             btnIn.Enabled = true;
@@ -226,7 +226,7 @@ namespace QuanLyCuaHangSach
                 txtdc.Text = "";
                 txtdt.Text = "";
             }
-            //Khi kich chon Ma khach thi ten khach, dia chi, dien thoai se tu dong hien ra
+            //Khi kich chon Ma khach thi ten NCC, dia chi, dien thoai se tu dong hien ra
             str = "Select TenNhaCC from NhaCungCap where MaNhaCC = N'" + cbomncc.SelectedValue + "'";
             txttncc.Text = DAO.GetFieldValues(str);
             str = "Select DiaChi from NhaCungCap where MaNhaCC = N'" + cbomncc.SelectedValue + "'";
@@ -324,7 +324,7 @@ namespace QuanLyCuaHangSach
                 //Xóa hàng và cập nhật lại số lượng hàng 
                 masach = gridviewHDN.CurrentRow.Cells["MaSach"].Value.ToString();
                 DelHang(txtmhdn.Text, masach);
-                // Cập nhật lại tổng tiền cho hóa đơn bán
+                // Cập nhật lại tổng tiền cho hóa đơn nhap
                 Thanhtien = Convert.ToDouble(gridviewHDN.CurrentRow.Cells["ThanhTien"].Value.ToString());
                 DelUpdateTongtien(txtmhdn.Text, Thanhtien);
                 Load_DataGridViewChitiet();
@@ -503,6 +503,24 @@ namespace QuanLyCuaHangSach
             btnLuu.Enabled = true;
             btnIn.Enabled = true;
             cbomhdb.SelectedIndex = -1;
+        }
+        private void txtdg_TextChanged(object sender, EventArgs e)
+        {
+            double tt, sl, dg, gg;
+            if (txtsl.Text == "")
+                sl = 0;
+            else
+                sl = Convert.ToDouble(txtsl.Text);
+            if (txtgg.Text == "")
+                gg = 0;
+            else
+                gg = Convert.ToDouble(txtgg.Text);
+            if (txtdg.Text == "")
+                dg = 0;
+            else
+                dg = Convert.ToDouble(txtdg.Text);
+            tt = sl * dg - sl * dg * gg / 100;
+            txtthanhtien.Text = tt.ToString();
         }
     }
 }

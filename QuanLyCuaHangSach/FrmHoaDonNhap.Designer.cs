@@ -240,6 +240,7 @@
             this.txtdg.Name = "txtdg";
             this.txtdg.Size = new System.Drawing.Size(120, 26);
             this.txtdg.TabIndex = 72;
+            this.txtdg.TextChanged += new System.EventHandler(this.txtdg_TextChanged);
             // 
             // txtts
             // 
